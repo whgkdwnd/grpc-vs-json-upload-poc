@@ -1,0 +1,5 @@
+syntax = "proto3";
+package poc;
+message Chunk { string sha256 = 1; string filename = 2; bytes data = 3; }
+message Result { int64 received = 1; }
+service Upload { rpc Submit(stream Chunk) returns (Result); }

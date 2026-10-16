@@ -1,0 +1,8 @@
+{"mode": "json", "payload_mb": 66.7, "received_mb": 50.0, "seconds": 0.69, "client_peak_mb": 260.7, "server_peak_mb": 261.6}
+{"mode": "json", "payload_mb": 66.7, "received_mb": 50.0, "seconds": 0.65, "client_peak_mb": 260.6, "server_peak_mb": 261.2}
+{"mode": "grpc", "payload_mb": 50.0, "received_mb": 50.0, "seconds": 0.44, "client_peak_mb": 41.4, "server_peak_mb": 46.1}
+{"mode": "grpc", "payload_mb": 50.0, "received_mb": 50.0, "seconds": 0.17, "client_peak_mb": 35.6, "server_peak_mb": 42.3}
+{"mode": "json", "payload_mb": 266.7, "received_mb": 200.0, "seconds": 3.08, "client_peak_mb": 975.8, "server_peak_mb": 729.4}
+{"mode": "json", "payload_mb": 266.7, "received_mb": 200.0, "seconds": 2.58, "client_peak_mb": 976.0, "server_peak_mb": 976.3}
+{"mode": "grpc", "payload_mb": 200.0, "received_mb": 200.0, "seconds": 0.72, "client_peak_mb": 35.5, "server_peak_mb": 43.1}
+{"mode": "grpc", "payload_mb": 200.0, "received_mb": 200.0, "seconds": 0.48, "client_peak_mb": 35.6, "server_peak_mb": 42.7}
