@@ -7,6 +7,8 @@ def peak_mb():
     rss = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
     return rss / 1024 / 1024 if sys.platform == "darwin" else rss / 1024
 
+CHUNK = 64 * 1024
+
 def json_server(port):
     class H(BaseHTTPRequestHandler):
         def do_POST(self):
@@ -16,6 +18,22 @@ def json_server(port):
             with tempfile.NamedTemporaryFile() as f:
                 f.write(data)
             out = json.dumps({"received": len(data), "server_peak_mb": round(peak_mb(), 1)}).encode()
+            self.send_response(200); self.send_header("Content-Length", str(len(out))); self.end_headers()
+            self.wfile.write(out)
+        def log_message(self, *a): pass
+    HTTPServer(("127.0.0.1", port), H).handle_request()
+
+def rest_server(port):
+    # 본문을 64KB씩 읽어 바로 디스크에 쓴다. 메타데이터는 헤더로 받는다.
+    class H(BaseHTTPRequestHandler):
+        def do_POST(self):
+            assert len(self.headers["X-Sha256"]) == 64
+            remaining = int(self.headers["Content-Length"]); n = 0
+            with tempfile.NamedTemporaryFile() as f:
+                while remaining:
+                    b = self.rfile.read(min(CHUNK, remaining))
+                    f.write(b); n += len(b); remaining -= len(b)
+            out = json.dumps({"received": n, "server_peak_mb": round(peak_mb(), 1)}).encode()
             self.send_response(200); self.send_header("Content-Length", str(len(out))); self.end_headers()
             self.wfile.write(out)
         def log_message(self, *a): pass
@@ -35,4 +53,4 @@ def grpc_server(port):
     s.add_insecure_port(f"127.0.0.1:{port}"); s.start(); s.wait_for_termination(timeout=600)
 
 if __name__ == "__main__":
-    {"json": json_server, "grpc": grpc_server}[sys.argv[1]](int(sys.argv[2]))
+    {"json": json_server, "rest": rest_server, "grpc": grpc_server}[sys.argv[1]](int(sys.argv[2]))
